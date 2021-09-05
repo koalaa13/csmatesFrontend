@@ -1,0 +1,61 @@
+/*
+SHOULD CHANGE VALUES OF THESE VARIABLES
+ON MY OWN BECAUSE OF DEFAULTS VALUES OF VUE-BOOTSTRAP
+CHECK https://bootstrap-vue.org/docs#important-html-globals
+*/
+$body-bg: #111739;
+$body-color: rgb(200, 200, 200);
+
+:root {
+  --header-cursive: "Play";
+  --background-color: #{$body-bg};
+  --second-color: rgba(200, 200, 200, 0.075);
+  --buttons-border-color: #040a29;
+  --black-color: #333;
+  --almost-white-color: #{$body-color};
+  --white-color: rgb(255, 255, 255);
+  font-family: Verdana, sans-serif;
+  color: var(--almost-white-color);
+}
+
+body, html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  /*remove vertical scroll*/
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: scroll;
+
+  background-color: var(--background-color);
+  margin: 0;
+}
+
+html {
+  min-width: 677px;
+  margin: 0 auto;
+}
+
+.content-with-margin {
+  margin: 0 10% 0 10%;
+  padding: 0;
+}
+
+.with-cache-background {
+  height: content-box;
+  width: 100%;
+  position: initial;
+  background-image: url("assets/cache_map_img.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
+@import 'node_modules/bootstrap-vue/src/index.scss';
