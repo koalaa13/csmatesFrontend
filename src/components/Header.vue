@@ -1,13 +1,13 @@
 <template>
   <header>
-    <a class="logo" href="#">
+    <a class="logo" @click="$router.push('/')">
       <img src="@/assets/logo.png" alt="CsGoTeammates">
     </a>
     <div class="enter-or-register-box">
       <a href="#">
         <span>Log In</span>
       </a>
-      <a href="#">
+      <a @click="$router.push('sign-up')">
         <span>Register</span>
       </a>
     </div>
