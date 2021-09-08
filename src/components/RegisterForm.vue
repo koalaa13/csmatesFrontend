@@ -1,23 +1,38 @@
 <template>
   <div class="registration-box">
-    <form class="login-pass-input-fields" name="logon" id="login-form">
+    <form class="sign-up-form">
       <div class="text-box">Enter your username:</div>
-      <input required class="text-field" type="text" autofocus maxlength="64">
+      <input v-model="username" class="text-field" type="text" required autofocus maxlength="64">
       <div class="text-box">Enter your password:</div>
-      <input required class="text-field" type="password" maxlength="64">
-      <div id="button-sign-in">
-        <input class="button-sign-in" type="submit" id="image-login" value="Sign in" style="margin-top: 10%">
-      </div>
-      <div id="button-sign-up">
-        <input class="button-sign-in" type="submit" id="image-signup" value="Sign in" style="background-color: #27d42a">
-      </div>
+      <input v-model="password" class="text-field" type="password" required maxlength="64">
+      <div class="text-box">Confirm your password:</div>
+      <input v-model="passwordConfirmation" class="text-field" type="password" required maxlength="64">
+      <input class="button-sign-in" type="submit" id="image-login" value="Sign up" style="margin-top: 10%">
     </form>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'RegisterForm'
+  name: 'RegisterForm',
+  data () {
+    return {
+      username: '',
+      password: '',
+      passwordConfirmation: ''
+    }
+  },
+  methods: {
+    register: function () {
+      const data = {
+        username: this.username,
+        password: this.password
+      }
+      this.$store.dispatch('register', data)
+        .then(() => this.$router.push('/'))
+        .catch(err => console.log(err))
+    }
+  }
 }
 </script>
 
@@ -34,11 +49,11 @@ export default {
   height: 360px;
 }
 
-.login-pass-input-fields {
+.sign-up-form {
   margin: auto;
   position: relative;
   width: 60%;
-  top: 10%;
+  top: 7%;
 }
 
 .text-field {

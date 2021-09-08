@@ -4,15 +4,40 @@
       <img src="@/assets/logo.png" alt="CsGoTeammates">
     </a>
     <div class="enter-or-register-box">
-      <a href="#">
-        <span>Log In</span>
-      </a>
-      <a @click="$router.push('sign-up')">
-        <span>Register</span>
-      </a>
+      <div v-if="isLoggedIn">
+        <a @click="logout">
+          <span>Logout</span>
+        </a>
+      </div>
+      <div v-else>
+        <a href="#">
+          <span>Log In</span>
+        </a>
+        <a @click="$router.push('sign-up')">
+          <span>Register</span>
+        </a>
+      </div>
     </div>
   </header>
 </template>
+
+<script>
+export default {
+  computed: {
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn
+    }
+  },
+  methods: {
+    logout: function () {
+      this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/')
+        })
+    }
+  }
+}
+</script>
 
 <style scoped>
 header {
