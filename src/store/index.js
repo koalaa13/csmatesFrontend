@@ -58,7 +58,7 @@ export default new Vuex.Store({
           }
         })
           .then(resp => {
-            dispatch('login')
+            dispatch('login', user)
             resolve(resp)
           })
           .catch(err => {
