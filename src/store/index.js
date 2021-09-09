@@ -21,10 +21,10 @@ export default new Vuex.Store({
     authRequest (state) {
       state.status = 'loading'
     },
-    authSuccess (state, token, user) {
+    authSuccess (state, payload) {
       state.status = 'success'
-      state.jwToken = token
-      state.user = user
+      state.jwToken = payload.token
+      state.user = payload.user
     },
     authError (state) {
       state.status = 'error'
@@ -48,9 +48,8 @@ export default new Vuex.Store({
       dispatch
     }, user) {
       return new Promise((resolve, reject) => {
-        commit('authRequest')
         axios({
-          url: BACKEND_API_URL + '/register',
+          url: BACKEND_API_URL + '/users/register',
           method: 'POST',
           data: {
             username: user.username,
@@ -58,6 +57,7 @@ export default new Vuex.Store({
           }
         })
           .then(resp => {
+            console.log('We have response after /users/register request to API')
             dispatch('login', user)
             resolve(resp)
           })
@@ -81,12 +81,14 @@ export default new Vuex.Store({
         })
           .then(resp => {
             const token = resp.headers[AUTHORIZATION_HEADER_NAME].slice(JWTOKEN_PREFIX.length)
-            user = {
-              username: user.username
-            }
             localStorage.setItem(JWTOKEN_LOCAL_STORAGE_NAME, token)
             axios.defaults.headers.common[AUTHORIZATION_HEADER_NAME] = token
-            commit('authSuccess', token, user)
+            commit('authSuccess',
+              {
+                token: token,
+                user: user
+              }
+            )
             resolve(resp)
           })
           .catch(err => {
@@ -100,6 +102,7 @@ export default new Vuex.Store({
   modules: {},
   getters: {
     isLoggedIn: state => !!state.jwToken,
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    getUsername: state => state.user.username
   }
 })

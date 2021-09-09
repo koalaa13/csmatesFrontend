@@ -1,34 +1,31 @@
 <template>
-  <div class="registration-box">
-    <form class="sign-up-form" @submit.prevent="register">
+  <div class="login-box">
+    <form class="sign-in-form" @submit.prevent="login">
       <div class="text-box">Enter your username:</div>
       <input v-model="username" class="text-field" type="text" required autofocus maxlength="64">
       <div class="text-box">Enter your password:</div>
       <input v-model="password" class="text-field" type="password" required maxlength="64">
-      <div class="text-box">Confirm your password:</div>
-      <input v-model="passwordConfirmation" class="text-field" type="password" required maxlength="64">
-      <input class="button-sign-up" type="submit" value="Sign up" style="margin-top: 10%">
+      <input class="button-sign-in" type="submit" value="Sign in" style="margin-top: 10%">
     </form>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'RegisterForm',
+  name: 'LoginForm',
   data () {
     return {
       username: '',
-      password: '',
-      passwordConfirmation: ''
+      password: ''
     }
   },
   methods: {
-    register: function () {
+    login: function () {
       const data = {
         username: this.username,
         password: this.password
       }
-      this.$store.dispatch('register', data)
+      this.$store.dispatch('login', data)
         .then(() => this.$router.push('/'))
         .catch(err => console.log(err))
     }
@@ -37,7 +34,7 @@ export default {
 </script>
 
 <style scoped>
-.registration-box {
+.login-box {
   margin: auto;
   position: relative;
   background-color: rgba(48, 48, 59, 0.4);
@@ -49,7 +46,7 @@ export default {
   height: 360px;
 }
 
-.sign-up-form {
+.sign-in-form {
   margin: auto;
   position: relative;
   width: 60%;
@@ -83,7 +80,7 @@ export default {
   font: 400 20px var(--header-cursive), Verdana;
 }
 
-.button-sign-up {
+.button-sign-in {
   color: whitesmoke;
   margin: 5% auto auto;
   border-width: 0;

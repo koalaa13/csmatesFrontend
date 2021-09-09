@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import ForNewUsers from '../views/ForNewUsers'
 import Registration from '../views/Registration'
+import Login from '../views/Login'
 
 Vue.use(VueRouter)
 
@@ -17,15 +18,12 @@ const routes = [
     component: Registration
     // it's lazy initialization
     // component: () => import('../views/Registration')
+  },
+  {
+    path: '/sign-in',
+    name: 'Login',
+    component: Login
   }
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
 ]
 
 const router = new VueRouter({

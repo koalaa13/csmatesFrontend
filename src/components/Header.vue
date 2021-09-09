@@ -5,12 +5,13 @@
     </a>
     <div class="enter-or-register-box">
       <div v-if="isLoggedIn">
+        <div>{{ getUsername }}</div>
         <a @click="logout">
           <span>Logout</span>
         </a>
       </div>
       <div v-else>
-        <a href="#">
+        <a @click="$router.push('sign-in')">
           <span>Log In</span>
         </a>
         <a @click="$router.push('sign-up')">
@@ -26,6 +27,9 @@ export default {
   computed: {
     isLoggedIn: function () {
       return this.$store.getters.isLoggedIn
+    },
+    getUsername: function () {
+      return this.$store.getters.getUsername
     }
   },
   methods: {
