@@ -1,21 +1,25 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueCookies from 'vue-cookies'
 
 import {
-  JWTOKEN_LOCAL_STORAGE_NAME,
+  JWTOKEN_COOKIE_NAME,
   AUTHORIZATION_HEADER_NAME,
   BACKEND_API_URL,
-  JWTOKEN_PREFIX
+  JWTOKEN_PREFIX,
+  LOGGED_USERNAME_COOKIE_NAME
 } from '../constants'
 import axios from 'axios'
 
-Vue.use(Vuex)
+Vue.use(Vuex).use(VueCookies)
 
 export default new Vuex.Store({
   state: {
     status: '',
-    jwToken: localStorage.getItem(JWTOKEN_LOCAL_STORAGE_NAME) || '',
-    user: {}
+    jwToken: Vue.$cookies.get(JWTOKEN_COOKIE_NAME) || '',
+    user: Vue.$cookies.get(LOGGED_USERNAME_COOKIE_NAME) === null
+      ? { username: '' }
+      : Vue.$cookies.get(LOGGED_USERNAME_COOKIE_NAME)
   },
   mutations: {
     authRequest (state) {
@@ -31,6 +35,7 @@ export default new Vuex.Store({
     },
     logout (state) {
       state.status = ''
+      state.user.username = ''
       state.jwToken = ''
     }
   },
@@ -38,7 +43,8 @@ export default new Vuex.Store({
     logout ({ commit }) {
       return new Promise((resolve, reject) => {
         commit('logout')
-        localStorage.removeItem(JWTOKEN_LOCAL_STORAGE_NAME)
+        Vue.$cookies.remove(JWTOKEN_COOKIE_NAME)
+        Vue.$cookies.remove(LOGGED_USERNAME_COOKIE_NAME)
         delete axios.defaults.headers.common[AUTHORIZATION_HEADER_NAME]
         resolve()
       })
@@ -63,7 +69,8 @@ export default new Vuex.Store({
           })
           .catch(err => {
             commit('authError')
-            localStorage.removeItem(JWTOKEN_LOCAL_STORAGE_NAME)
+            Vue.$cookies.remove(JWTOKEN_COOKIE_NAME)
+            Vue.$cookies.remove(LOGGED_USERNAME_COOKIE_NAME)
             reject(err)
           })
       })
@@ -81,7 +88,9 @@ export default new Vuex.Store({
         })
           .then(resp => {
             const token = resp.headers[AUTHORIZATION_HEADER_NAME].slice(JWTOKEN_PREFIX.length)
-            localStorage.setItem(JWTOKEN_LOCAL_STORAGE_NAME, token)
+            Vue.$cookies.set(JWTOKEN_COOKIE_NAME, token)
+            delete user.password
+            Vue.$cookies.set(LOGGED_USERNAME_COOKIE_NAME, user)
             axios.defaults.headers.common[AUTHORIZATION_HEADER_NAME] = token
             commit('authSuccess',
               {
@@ -93,7 +102,8 @@ export default new Vuex.Store({
           })
           .catch(err => {
             commit('authError')
-            localStorage.removeItem(JWTOKEN_LOCAL_STORAGE_NAME)
+            Vue.$cookies.remove(JWTOKEN_COOKIE_NAME)
+            Vue.$cookies.remove(LOGGED_USERNAME_COOKIE_NAME)
             reject(err)
           })
       })
@@ -103,6 +113,12 @@ export default new Vuex.Store({
   getters: {
     isLoggedIn: state => !!state.jwToken,
     authStatus: state => state.status,
-    getUsername: state => state.user.username
+    getUsername: state => {
+      if (state.user) {
+        return state.user.username
+      } else {
+        return ''
+      }
+    }
   }
 })
