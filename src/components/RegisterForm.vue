@@ -1,6 +1,8 @@
 <template>
   <div class="registration-box">
     <form class="sign-up-form" @submit.prevent="register">
+      <div class="text-box">Enter your email:</div>
+      <input v-model="email" class="text-field" type="text" required autofocus maxlength="64">
       <div class="text-box">Enter your username:</div>
       <input v-model="username" class="text-field" type="text" required autofocus maxlength="64">
       <div class="text-box">Enter your password:</div>
@@ -17,6 +19,7 @@ export default {
   name: 'RegisterForm',
   data () {
     return {
+      email: '',
       username: '',
       password: '',
       passwordConfirmation: ''
@@ -25,6 +28,7 @@ export default {
   methods: {
     register: function () {
       const data = {
+        email: this.email,
         username: this.username,
         password: this.password
       }
@@ -46,7 +50,7 @@ export default {
   border-width: 0;
   border-radius: 5px;
   width: 540px;
-  height: 360px;
+  height: 480px;
 }
 
 .sign-up-form {

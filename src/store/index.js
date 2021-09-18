@@ -7,7 +7,7 @@ import {
   AUTHORIZATION_HEADER_NAME,
   BACKEND_API_URL,
   JWTOKEN_PREFIX,
-  LOGGED_USERNAME_COOKIE_NAME
+  LOGGED_USERNAME_LOCALSTORAGE_NAME
 } from '../constants'
 import axios from 'axios'
 
@@ -17,9 +17,9 @@ export default new Vuex.Store({
   state: {
     status: '',
     jwToken: Vue.$cookies.get(JWTOKEN_COOKIE_NAME) || '',
-    user: Vue.$cookies.get(LOGGED_USERNAME_COOKIE_NAME) === null
+    user: localStorage.getItem(LOGGED_USERNAME_LOCALSTORAGE_NAME) === null
       ? { username: '' }
-      : Vue.$cookies.get(LOGGED_USERNAME_COOKIE_NAME)
+      : localStorage.getItem(LOGGED_USERNAME_LOCALSTORAGE_NAME)
   },
   mutations: {
     authRequest (state) {
@@ -44,7 +44,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit('logout')
         Vue.$cookies.remove(JWTOKEN_COOKIE_NAME)
-        Vue.$cookies.remove(LOGGED_USERNAME_COOKIE_NAME)
+        localStorage.removeItem(LOGGED_USERNAME_LOCALSTORAGE_NAME)
         delete axios.defaults.headers.common[AUTHORIZATION_HEADER_NAME]
         resolve()
       })
@@ -55,22 +55,24 @@ export default new Vuex.Store({
     }, user) {
       return new Promise((resolve, reject) => {
         axios({
-          url: BACKEND_API_URL + '/users/register',
+          url: BACKEND_API_URL + '/registration',
           method: 'POST',
           data: {
+            email: user.email,
             username: user.username,
             password: user.password
           }
         })
           .then(resp => {
-            console.log('We have response after /users/register request to API')
+            console.log('We have response after /registration request to API')
+            // TODO here I can't login because user should activate his acc by email
             dispatch('login', user)
             resolve(resp)
           })
           .catch(err => {
             commit('authError')
             Vue.$cookies.remove(JWTOKEN_COOKIE_NAME)
-            Vue.$cookies.remove(LOGGED_USERNAME_COOKIE_NAME)
+            localStorage.removeItem(LOGGED_USERNAME_LOCALSTORAGE_NAME)
             reject(err)
           })
       })
@@ -82,7 +84,7 @@ export default new Vuex.Store({
           url: BACKEND_API_URL + '/login',
           method: 'POST',
           data: {
-            username: user.username,
+            email: user.email,
             password: user.password
           }
         })
@@ -90,7 +92,7 @@ export default new Vuex.Store({
             const token = resp.headers[AUTHORIZATION_HEADER_NAME].slice(JWTOKEN_PREFIX.length)
             Vue.$cookies.set(JWTOKEN_COOKIE_NAME, token)
             delete user.password
-            Vue.$cookies.set(LOGGED_USERNAME_COOKIE_NAME, user)
+            localStorage.setItem(LOGGED_USERNAME_LOCALSTORAGE_NAME, user)
             axios.defaults.headers.common[AUTHORIZATION_HEADER_NAME] = token
             commit('authSuccess',
               {
@@ -103,7 +105,7 @@ export default new Vuex.Store({
           .catch(err => {
             commit('authError')
             Vue.$cookies.remove(JWTOKEN_COOKIE_NAME)
-            Vue.$cookies.remove(LOGGED_USERNAME_COOKIE_NAME)
+            localStorage.removeItem(LOGGED_USERNAME_LOCALSTORAGE_NAME)
             reject(err)
           })
       })

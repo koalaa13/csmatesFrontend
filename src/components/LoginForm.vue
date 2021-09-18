@@ -1,8 +1,8 @@
 <template>
   <div class="login-box">
     <form class="sign-in-form" @submit.prevent="login">
-      <div class="text-box">Enter your username:</div>
-      <input v-model="username" class="text-field" type="text" required autofocus maxlength="64">
+      <div class="text-box">Enter your email:</div>
+      <input v-model="email" class="text-field" type="text" required autofocus maxlength="64">
       <div class="text-box">Enter your password:</div>
       <input v-model="password" class="text-field" type="password" required maxlength="64">
       <input class="button-sign-in" type="submit" value="Sign in" style="margin-top: 10%">
@@ -15,14 +15,14 @@ export default {
   name: 'LoginForm',
   data () {
     return {
-      username: '',
+      email: '',
       password: ''
     }
   },
   methods: {
     login: function () {
       const data = {
-        username: this.username,
+        email: this.email,
         password: this.password
       }
       this.$store.dispatch('login', data)
