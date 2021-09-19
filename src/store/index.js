@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueCookies from 'vue-cookies'
+import router from '../router'
 
 import {
   JWTOKEN_COOKIE_NAME,
@@ -53,6 +54,7 @@ export default new Vuex.Store({
       commit,
       dispatch
     }, user) {
+      console.log(this._vm)
       return new Promise((resolve, reject) => {
         axios({
           url: BACKEND_API_URL + '/registration',
@@ -64,9 +66,14 @@ export default new Vuex.Store({
           }
         })
           .then(resp => {
+            // TODO IDK HOW TO TOAST FROM STORE
             console.log('We have response after /registration request to API')
-            // TODO here I can't login because user should activate his acc by email
-            dispatch('login', user)
+            // vm.$bvToast.toast('You have been successfully registered!\n Confirm your email and start to build a team!', {
+            //   title: 'Successful registration!',
+            //   variant: 'success',
+            //   solid: true
+            // })
+            router.push('/login')
             resolve(resp)
           })
           .catch(err => {

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import ForNewUsers from '../views/ForNewUsers'
 import Registration from '../views/Registration'
 import Login from '../views/Login'
+import PageNotFound from '../views/PageNotFound'
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,11 @@ const routes = [
     path: '/sign-in',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '*',
+    name: 'PageNotFound',
+    component: PageNotFound
   }
 ]
 
