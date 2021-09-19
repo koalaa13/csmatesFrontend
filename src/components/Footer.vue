@@ -7,6 +7,7 @@
 <script>
 export default {
   methods: {
+    // TODO remove this checking toast function
     check: function () {
       this.$bvToast.toast('You have been successfully registered!\n Confirm your email and start to build a team!', {
         title: 'Successful registration!',
